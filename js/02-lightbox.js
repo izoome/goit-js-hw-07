@@ -1,24 +1,43 @@
 import { galleryItems } from "./gallery-items.js";
+// Change code below this line
+console.log(galleryItems);
 
-const galleryListItem = document.querySelector(".gallery");
+const refs = {
+  gallery: document.querySelector(".gallery"),
+};
 
-const createGalleryListItem = galleryItems
-  .map(
-    ({
-      preview,
-      original,
-      description,
-    }) => `<a class="gallery__item" href="${original}">
-  <img class="gallery__image" src="${preview}" alt="${description}" />
-</a>`
-  )
-  .join("");
+refs.gallery.insertAdjacentHTML("beforeend", makeGalleryMarkup(galleryItems));
 
-galleryListItem.insertAdjacentHTML("afterbegin", `${createGalleryListItem}`);
-
-const gallerySimpleLightbox = new SimpleLightbox(".gallery a", {
+const lightbox = new SimpleLightbox(".gallery a", {
   captionsData: "alt",
   captionDelay: 250,
 });
 
-console.log(galleryItems);
+refs.gallery.addEventListener("click", onGalleryItemClick);
+
+function makeGalleryMarkup(items) {
+  return items
+    .map(({ original, preview, description }) => {
+      return `
+            <a class="gallery__link" href="${original}">
+                <img
+                    src="${preview}"
+                    alt="${description}"
+                    class="gallery__image"
+                />
+            </a>
+            `;
+    })
+    .join("");
+}
+
+function onGalleryItemClick(e) {
+  if (e.target === e.currentTarget) return;
+  e.preventDefault();
+}
+
+// function onEscKeyPress(e) {
+// 	if (e.code === "Escape") {
+// 		modal.close();
+// 	}
+// }
